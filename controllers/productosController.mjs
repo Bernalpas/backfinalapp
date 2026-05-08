@@ -77,6 +77,8 @@ const actualizarProducto = async (req, res) => {
     // obtenemos el id del producto a actualizar
     const id = req.params.id;
 
+    console.log(id);
+
     // capturamos los datos del producto a actualizar
     const nuevoProducto = {
       nombre: req.body.nombreProducto,
@@ -103,7 +105,7 @@ const actualizarProducto = async (req, res) => {
 
     // si el producto se actualizad con éxito, devolvemos un mensaje de éxito
     console.log(productoAcrualizado);
-    
+
     return res.status(200).send({
       message: "Producto actualizado con éxito"
     })
@@ -121,6 +123,8 @@ const eliminarProducto = async (req, res) => {
   try{
     // obtenemos el id del producto a eliminar
     const id = req.params.id;
+
+    console.log(id);
 
     // buscamos en la database el producto a eliminar
     const product = await ProductosModel.findById(id);

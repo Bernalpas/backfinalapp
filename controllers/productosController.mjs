@@ -5,7 +5,7 @@ const  guardarProducto = async (req, res) => {
   //Desestructuramos los datos recibidos en el cuerpo de la petición
   const nuevoProducto = {
     nombre: req.body.nombreProducto,
-    precio: req.body.precioProducto,
+    precio: req.body.precioProducto, //verificar si es número desde el front
     descripcion: req.body.descripcionProducto,
     imagen: req.body.imagenProducto
   };
@@ -70,9 +70,55 @@ const detallesProducto = async (req, res) => {
 
 }
 
+// Función para actualizar un producto específico
+const actualizarProducto = async (req, res) => {}
+
+// Función para eliminar un producto específico
+const eliminarProducto = async (req, res) => {
+
+  try{
+    // obtenemos el id del producto a eliminar
+    const id = req.params.id;
+
+    // buscamos en la database el producto a eliminar
+    const product = await ProductosModel.findById(id);
+
+    // si no existe el producto, devolvemos un error
+    if(!product){
+      return res.status(404).send({
+        message: "No existe ese producto"
+      })
+    }
+    
+    // eliminamos el producto
+    const productoEliminado = await ProductosModel.findByIdAndDelete(id);
+
+    //verificamos si se eliminó el producto
+    console.log(productoEliminado);
+    
+    if(!productoEliminado){
+      return res.status(500).send({
+        message: "Error al eliminar el producto"
+      })
+    }
+
+    // si el producto se eliminó con éxito, devolvemos un mensaje de éxito
+    console.log(product);
+    return res.status(200).send({
+      message: "Producto eliminado con éxito"
+    })
+
+  }catch(err){
+    console.log(err);
+    return res.status(500).send("Internal server error")
+  }
+}
+
 export {
     guardarProducto,
     listarProductos,
-    detallesProducto
+    detallesProducto,
+    actualizarProducto,
+    eliminarProducto
 }
 

@@ -120,7 +120,7 @@ const actualizarProducto = async (req, res) => {
 }
 
 // Función para eliminar un producto de la base de datos
-export const eliminarProducto = async (req, res) => {
+const eliminarProducto = async (req, res) => {
     try {
         // 1. Extraemos el ID del producto desde la URL
         const id = req.params.id;

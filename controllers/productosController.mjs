@@ -87,6 +87,8 @@ const actualizarProducto = async (req, res) => {
       imagen: req.body.imagenProducto
     };
 
+    console.log(id);
+
     console.log(nuevoProducto);
     
     // buscamos en la database el producto a actualizar y lo actualizamos

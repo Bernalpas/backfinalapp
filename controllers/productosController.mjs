@@ -119,48 +119,36 @@ const actualizarProducto = async (req, res) => {
 
 }
 
-// Función para eliminar un producto específico
-const eliminarProducto = async (req, res) => {
+// Función para eliminar un producto de la base de datos
+export const eliminarProducto = async (req, res) => {
+    try {
+        // 1. Extraemos el ID del producto desde la URL
+        const id = req.params.id;
 
-  try{
-    // obtenemos el id del producto a eliminar
-    const id = req.params.id;
+        // 2. Usamos el método de Mongoose para buscar el documento por su ID y borrarlo directamente
+        const productoEliminado = await ProductosModel.findByIdAndDelete(id);
 
-    console.log(id);
+        // 3. Validamos si el producto existía antes de intentar borrarlo
+        if (!productoEliminado) {
+            return res.status(404).send({
+                message: "No existe ese producto para eliminar"
+            });
+        }
 
-    // buscamos en la database el producto a eliminar
-    const product = await ProductosModel.findById(id);
+        // 4. Respondemos con éxito confirmando la eliminación al frontend
+        return res.status(200).json({
+            message: 'Producto eliminado correctamente',
+            producto: productoEliminado // Opcional: devolvemos los datos del producto que acabamos de borrar
+        });
 
-    // si no existe el producto, devolvemos un error
-    if(!product){
-      return res.status(404).send({
-        message: "No existe ese producto"
-      })
+    } catch (error) {
+        // 5. Capturamos cualquier error inesperado
+        return res.status(500).json({
+            message: 'Error al eliminar el producto',
+            error: error.message
+        });
     }
-    
-    // eliminamos el producto
-    const productoEliminado = await ProductosModel.findByIdAndDelete(id);
-
-    //verificamos si se eliminó el producto
-    console.log(productoEliminado);
-
-    if(!productoEliminado){
-      return res.status(500).send({
-        message: "Error al eliminar el producto"
-      })
-    }
-
-    // si el producto se eliminó con éxito, devolvemos un mensaje de éxito
-    console.log(product);
-    return res.status(200).send({
-      message: "Producto eliminado con éxito"
-    })
-
-  }catch(err){
-    console.log(err);
-    return res.status(500).send("Internal server error")
-  }
-}
+};
 
 export {
     guardarProducto,
